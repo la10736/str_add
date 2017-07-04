@@ -12,7 +12,7 @@ pub fn add(data: &str) -> Values {
 }
 
 fn itemize<'a>(data: &'a str) -> Box<Iterator<Item=Values> + 'a> {
-    Box::new(data.split(',').map(parse_token))
+    Box::new(data.split(|c| c==',' || c=='\n').map(parse_token))
 }
 
 fn parse_token(token: &str) -> Values {
@@ -40,4 +40,9 @@ mod tests {
         assert_eq!(6, add("1,2,3"));
     }
 
+    #[test]
+    fn also_carriage_return_is_a_separator() {
+        assert_eq!(3, add("1\n2"));
+        assert_eq!(25, add("1,2\n3,4,12\n1\n2"));
+    }
 }
