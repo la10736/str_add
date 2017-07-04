@@ -2,14 +2,16 @@ fn main() {
     println!("Hello, string_adder!");
 }
 
-pub fn add(data: &str) -> i32 {
+pub type Values = i32;
+
+pub fn add(data: &str) -> Values {
     if data.is_empty() {
         return 0
     }
     parse_token(data)
 }
 
-fn parse_token(token: &str) -> i32 {
+fn parse_token(token: &str) -> Values {
     token.parse().unwrap()
 }
 
