@@ -8,20 +8,27 @@ pub fn add(data: &str) -> Values {
     if data.is_empty() {
         return 0
     }
-    if data.starts_with("//["){
-        let separator = data.chars().nth(3).unwrap();
-        let itemizer = Itemize::new(separator);
-
-        return itemizer.itemize(data.splitn(2,'\n').nth(1).unwrap()).sum()
+    let (header, data) = split_header(data);
+    let mut itemize = Itemize::default();
+    if let Some(h) = header {
+        let separator = h.chars().nth(3).unwrap();
+        itemize = Itemize::new(separator);
     }
-    Itemize::default().itemize(data).sum()
+    itemize.itemize(data).sum()
+}
+
+fn split_header(data: &str) -> (Option<&str>, &str) {
+    if data.starts_with("//[") {
+        let mut lines = data.splitn(2, '\n');
+        (lines.next(), lines.next().unwrap())
+    } else { (None, data) }
 }
 
 struct Itemize {
     separator: char
 }
 
-impl Default for Itemize{
+impl Default for Itemize {
     fn default() -> Self {
         Self::new(',')
     }
@@ -39,7 +46,7 @@ impl Itemize {
     }
 
     fn is_separator(&self, c: char) -> bool {
-        c==self.separator || c=='\n'
+        c == self.separator || c == '\n'
     }
 
     fn parse_token(token: &str) -> Values {
