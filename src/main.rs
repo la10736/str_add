@@ -8,7 +8,11 @@ pub fn add(data: &str) -> Values {
     if data.is_empty() {
         return 0
     }
-    data.split(',').map(parse_token).sum()
+    itemize(data).sum()
+}
+
+fn itemize<'a>(data: &'a str) -> Box<Iterator<Item=Values> + 'a> {
+    Box::new(data.split(',').map(parse_token))
 }
 
 fn parse_token(token: &str) -> Values {
