@@ -8,19 +8,37 @@ pub fn add(data: &str) -> Values {
     if data.is_empty() {
         return 0
     }
-    itemize(data).sum()
+    Itemize::default().itemize(data).sum()
 }
 
-fn itemize<'a>(data: &'a str) -> Box<Iterator<Item=Values> + 'a> {
-    Box::new(data.split(is_separator).map(parse_token))
+struct Itemize {
+    separator: char
 }
 
-fn is_separator(c: char) -> bool {
-    c==',' || c=='\n'
+impl Default for Itemize{
+    fn default() -> Self {
+        Self::new(',')
+    }
 }
 
-fn parse_token(token: &str) -> Values {
-    token.parse().unwrap()
+impl Itemize {
+    pub fn new(separator: char) -> Self {
+        Itemize {
+            separator: separator
+        }
+    }
+
+    pub fn itemize<'a>(self, data: &'a str) -> Box<Iterator<Item=Values> + 'a> {
+        Box::new(data.split(move |c| self.is_separator(c)).map(Self::parse_token))
+    }
+
+    fn is_separator(&self, c: char) -> bool {
+        c==self.separator || c=='\n'
+    }
+
+    fn parse_token(token: &str) -> Values {
+        token.parse().unwrap()
+    }
 }
 
 #[cfg(test)]
