@@ -6,7 +6,11 @@ pub fn add(data: &str) -> i32 {
     if data.is_empty() {
         return 0
     }
-    data.parse().unwrap()
+    parse_token(data)
+}
+
+fn parse_token(token: &str) -> i32 {
+    token.parse().unwrap()
 }
 
 #[cfg(test)]
