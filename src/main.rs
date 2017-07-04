@@ -8,7 +8,7 @@ pub fn add(data: &str) -> Values {
     if data.is_empty() {
         return 0
     }
-    parse_token(data)
+    data.split(',').map(parse_token).sum()
 }
 
 fn parse_token(token: &str) -> Values {
@@ -28,6 +28,12 @@ mod tests {
     fn should_return_parsed_integers() {
         assert_eq!(3, add("3"));
         assert_eq!(12, add("12"));
+    }
+
+    #[test]
+    fn should_sum_comma_separated_integers() {
+        assert_eq!(3, add("1,2"));
+        assert_eq!(6, add("1,2,3"));
     }
 
 }
