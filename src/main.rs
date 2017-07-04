@@ -12,7 +12,11 @@ pub fn add(data: &str) -> Values {
 }
 
 fn itemize<'a>(data: &'a str) -> Box<Iterator<Item=Values> + 'a> {
-    Box::new(data.split(|c| c==',' || c=='\n').map(parse_token))
+    Box::new(data.split(is_separator).map(parse_token))
+}
+
+fn is_separator(c: char) -> bool {
+    c==',' || c=='\n'
 }
 
 fn parse_token(token: &str) -> Values {
