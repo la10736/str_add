@@ -9,12 +9,7 @@ pub fn add(data: &str) -> Values {
         return 0
     }
     let (header, data) = split_header(data);
-    let mut itemize = Itemize::default();
-    if let Some(h) = header {
-        let separator = h.chars().nth(3).unwrap();
-        itemize = Itemize::new(separator);
-    }
-    itemize.itemize(data).sum()
+    header.map(itemize_by_header).unwrap_or_default().itemize(data).sum()
 }
 
 fn split_header(data: &str) -> (Option<&str>, &str) {
@@ -22,6 +17,10 @@ fn split_header(data: &str) -> (Option<&str>, &str) {
         let mut lines = data.splitn(2, '\n');
         (lines.next(), lines.next().unwrap())
     } else { (None, data) }
+}
+
+fn itemize_by_header(header: &str) -> Itemize {
+    Itemize::new(header.chars().nth(3).unwrap())
 }
 
 struct Itemize {
